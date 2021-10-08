@@ -4,10 +4,11 @@
   "description": "Capstone Project Group B with name Fantasy E-Sports league",
   "main": "app.js",
   "scripts": {
-    "test": "mocha UnitTest/appTest.js",
-   "start":"node app.js",
+    "test": "mocha UnitTest/appTest.js"
+  
   },
-   
+  
+    "start":"node app.js",
   "author": "Team B",
   "license": "ISC",
   "dependencies": {
