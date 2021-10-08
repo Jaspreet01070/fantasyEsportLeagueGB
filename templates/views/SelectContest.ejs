@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-datepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-datepicker.css" >
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta charset="UTF-8">
+    <title>GRANDMASTER LEAGUE</title>
+    <link rel="stylesheet" type="text/css" href="/css/SelectContest.css">
+
+</head>
+<body>
+
+<div class="navbar">
+    <div class="navbar_element logo_image">
+        <img class="img" src="/images/login.png">
+    </div>
+    <div class="navbar_element store_name">
+        <label class="label1">Fantasy E-Sport League</label>
+    </div>
+    <div class="navbar_element user">
+        <label class="label2"> Hello, <%= username%></label>
+    </div>
+    <div class="logoutlink">
+        <a href="/" class="btn btn-primary">Logout</a>
+    </div>
+</div>
+
+
+<div class="tabs-container">
+    <div class="tabs-pages">
+        <div class="tab active">Contests</div>
+    </div>
+    <div class="tabs-contents">
+        <div class="tab-c active">
+            <div class="inner-content">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <!--<th scope="col">ID</th>-->
+                        <th scope="col">Contest name</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">  </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%contestsList.forEach(contest => {%>
+                        <% var currentDate = new Date().toLocaleDateString('en-ZA');
+                           var startDate = new Date(contest.cPeriod).toLocaleDateString('en-ZA');
+                           var endDate = new Date(new Date(contest.cPeriod).setDate(new Date(contest.cPeriod).getDate() + 7)).toLocaleDateString('en-ZA');
+                           var btnStatus = 1;
+                        %>
+
+                            <tr>
+                                <!--<th scope="row"><%= contest._id %></th>-->
+                                <td>&#11088; <%= contest.cName %></td>
+                                <td><%= startDate %> </td>
+                                <td><%= endDate %></td>
+                                <td> <% if(contest.cStatus === true){ %>
+                                    <% if(currentDate >= startDate && currentDate <= endDate){%>
+                                            <label class="ongoingLab" id="ongoingLab">ONGOING</label>
+                                        <% btnStatus = 1;
+                                    } else {%>
+                                            <label class="comingLab" id="comingLab">NEXT</label>
+                                    <% btnStatus = 2;
+                                    }
+                                } else{%>
+                                    <label class="completeLab" id="completeLab">DONE</label>
+                                    <% btnStatus = 3;
+                                }%></td>
+                                <td><% if(btnStatus === 2){ %>
+                                        <a href="/selectPlayers?id=<%= contest._id %>&date=<%= startDate %>"><button type="button" class="myButton">Enter</button></a>
+                                    <%} else if(btnStatus === 1){%>
+                                        <!-- <button type="button" class="myButton" disabled="disabled">LIVE</button> -->
+                                        <a href="/players"><button type="button" class="myButton">Live</button></a>
+                                    <%} else{%>
+                                        <button type="button" class="myButton" disabled="disabled">Done</button>
+                                        
+
+                                    <%}%>
+                                </td>
+                            </tr>
+                    <%})%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

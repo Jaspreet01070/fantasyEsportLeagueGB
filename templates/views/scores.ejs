@@ -1,0 +1,75 @@
+<html>
+
+
+
+<body>
+
+<h1 >Grand Master League </h1>
+  <%
+  var assista = [];
+  var  killss = [];
+  var deaths = []
+
+     data.assist.forEach(function (assist){
+
+    assista.push(assist.valueOf());
+    });
+
+     data.kills.forEach(function (kills) {
+      killss.push(kills.valueOf());
+     });
+
+     data.deaths.forEach(function (deaths ){
+     deaths.push(deaths.valueOf());
+  });
+     %>
+
+
+
+
+
+
+  <table id="showPlayer" >
+
+   <!--tables heading-->
+   <tr> <th>Rank</th> <th>Assist</th> <th>Kills</th>  <th>Deaths</th> </tr>
+
+   <!--table body-->
+   <tbody >
+
+   <!-- sorting the players based on winning points
+   the highest winning points are displayed first-->
+
+
+   <%
+   for (var i=0;i<=assista.length;i++){ %>
+   <tr>
+    <td>
+     <%= i+1 %>
+    </td>
+    <td>
+     <%= assista[i]%>
+    </td>
+    <td>
+     <%= killss[i] %>
+    </td>
+    <td>
+     <%= deaths[i] %>
+    </td>
+   </tr>
+    <!-- Assigning salaries to the players-->
+    <!-- first top 30 players - $9500-->
+    <!-- next 60 players - $7500-->
+    <!-- next 120 players - $5000-->
+    <!-- remaining  players i.e., beyond 200 players - 0 salary -->
+
+   <% } %>
+
+</tbody>
+  </table>
+
+
+</body>
+</html>
+
+

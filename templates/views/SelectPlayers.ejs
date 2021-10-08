@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GRANDMASTER LEAGUE</title>
+<link rel="stylesheet" href="css/styles.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--    <script src="tablesFunction.js" async defer ></script>-->
+    <script src="app.js" ></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+</head>
+<body >
+
+<div class="alert-box hide">
+    <p></p>
+    <button type="button" class="close-button" onclick="closeAlert();">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<!-- This code is for you to get the id from url -->
+<!-- <button onclick="getURL()">test</button>
+<script>
+    function getURL(){
+        var newURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + window.location.search;
+        ParsingURL(newURL);
+    }
+
+    function ParsingURL(url){
+        let pageURL = new URL(url);
+        let params = pageURL.searchParams;
+        params.get('id');
+        params.get('date');
+        alert("id:" + params.get('id') + " date:" +  params.get('date'));
+    }
+</script> -->
+<!-- end -->
+
+<script>
+    const queryString = window.location.search;
+
+    // console.log(queryString);
+    const urlParams = new URLSearchParams(queryString);
+    const Cid = urlParams.get('id');
+    console.log(Cid);
+
+</script>
+<%= %>
+<div class="navbar">
+    <div class="navbar_element logo_image">
+        <img class="img" src="/images/login.png">
+    </div>
+    <div class="navbar_element store_name">
+        <label class="label1">Fantasy E-Sport League</label>
+    </div>
+    <div class="navbar_element user">
+        <label class="label2"> Hello, <%= data.username%></label>
+        
+    </div>
+    <div class="logoutlink">
+        <a href="/"  class="btn btn-primary">Logout</a>
+    </div>
+</div>
+
+   <!-- <h1 style="color: orange"> GRAND MASTER LEAGUE </h1>
+    <h3> </h3> -->
+    <h3 id="salary"> Salary: $60000</h3>
+    
+    <div id="main"  class="table-responsive col-lg-12" >
+        <div class="col-lg-6" style="height: 800px;  overflow: auto; padding: 0 15px;">
+
+            <!-------Creating an empty array and pushing the values players and winning points into it-------->
+            <%
+            var player=[];
+            var win=[];
+            // retrieving the the players data from the RIOTAPI and pushing into the array
+                data.players.forEach(function(players)
+                {
+                    player.push(players.valueOf());
+
+                });
+            // retrieving the the winning points data from the RIOTAPI and pushing into the array
+                data.wins.forEach(function (wins)
+                {
+                    win.push(wins.valueOf());
+                });
+            %>
+
+
+            <!--------------The API data is displayed in a table structure----------->
+            <!--creation of table-->
+
+                <!--Search Bar -->
+
+                <!-- input tag --->
+                <input class=" btn btn-block  form-controller" id="searchBar" onkeyup="searchNames()" type="text" name="searchBar" placeholder="Search by names....."><br>
+
+                <script>
+
+                    // code for search tab
+                    function searchNames()
+                    {
+                        var input = document.getElementById("searchBar");
+                        var filter = input.value.toUpperCase();
+                        var table = document.getElementById("showPlayer");
+                        var tr = table.getElementsByTagName("tr");
+                        for (var i = 0; i < tr.length; i++)
+                        {
+                            var td = tr[i].getElementsByTagName("td")[1];
+                            if (td)
+                            {
+                                var txtValue = td.textContent || td.innerText;
+                                if (txtValue.toUpperCase().indexOf(filter) > -1 )
+                                {
+                                    tr[i].style.display = "";
+                                } else {
+                                    tr[i].style.display = "none";
+                                }
+                            }
+                        }
+                    }
+                </script>
+
+                <table id="showPlayer" class="table table-hover table-condensed"  >
+
+                    <!--tables heading-->
+                    <tr> <th>Rank</th> <th>Players</th> <th>Wins</th> <th>Salary </th> <th> Select player </th></tr>
+
+                    <!--table body-->
+                    <tbody >
+
+                    <!-- sorting the players based on winning points
+                    the highest winning points are displayed first-->
+                    <%
+                    win.sort((a,b) => b-a );
+                    //console.log(win)
+                    %>
+
+                    <%
+                    for (var i=0;i<=250;i++){ %>
+                        <tr>
+                            <td>
+                                <%= i+1 %>
+                            </td>
+                            <td>
+                                <%= player[i]%>
+                            </td>
+                            <td> <%= win[i]%>
+                            </td>
+
+                            <!-- Assigning salaries to the players-->
+                            <!-- first top 30 players - $9500-->
+                            <!-- next 60 players - $7500-->
+                            <!-- next 120 players - $5000-->
+                            <!-- remaining  players i.e., beyond 200 players - 0 salary -->
+
+                            <td>
+                                <% if ( i < 30) { %> $9500<% }
+                                else if (i >= 30 && i <80){ %> $7500<% }
+                                else if (i >= 80 && i <= 200){ %> $5000 <% }
+                                else  {  %> $0 <% } %>
+                            </td>
+                            <td>
+                                <!--Adding a checkbox for selecting the players  -->
+                                <!--calling the add() function on the checkbox whenever user clicks on it-->
+                                <label>
+                                    <input class="btn btn-success" id="selP" type="checkbox" name="chkAdd" style='background-color: lightgreen' onclick="addPlayers()">
+                                    <span class="btn btn-success btn-block" style="background-color: green; border: 1px outset black;">ADD</span>
+                                </label>
+                            </td></tr>
+                    <% } %>
+                    </tbody></table>
+
+
+        </div>
+
+<!--    second  table-->
+        <div class="col-lg-6" style="height: 700px;">
+
+            <!--for current salary info-->
+
+
+<!--            <form action="/submitPlayers" method="POST">-->
+
+
+
+            <!--Table is created dynamically as the user is adding the players-->
+            <table class="table table-hover"  id="selPlayers" name="selPlayers" >
+                <tr id="selDel"> <th>Rank</th> <th>Team Captain</th> <th>Selected Players</th><th>Wins</th> <th>Salary</th> <th>Delete</th></tr>
+
+                <tbody id="txt"> </tbody>
+            </table>
+
+                <input class="btn btn-primary btn-lg btn-block" type="submit" value="submit"  onclick="submitPlayers()" />
+                <p id="lessThan10"> </p>
+<!--            </form>-->
+        </div>
+    </div>
+
+
+<script>
+
+    /* for updating salary from both the functions*/
+    class CreateTeam {
+        static salary1 = 60000;
+    }
+
+
+
+    /* Function for adding the players to participate in the contest */
+    function addPlayers()
+    {
+        var table1 = document.getElementById("showPlayer");
+        var table2 = document.getElementById("selPlayers");
+        var chk = document.getElementsByName("chkAdd");
+
+        if (table2.rows.length >= 11)
+        {
+            //document.getElementById("alerts").append("<p class='alert alert-danger'> must choose 10 players only. </p>")
+           // window.alert("");// alert message: saying to choose 10 players only
+            $('.alert-box p').empty();
+            $('.alert-box').removeClass("hide");
+            $('body').addClass("alert-box-open");
+            $('.alert-box p').append("Must choose 10 players only!!");
+
+        } else {
+
+            for (var i = 0; i < chk.length; i++)//check the length of the checked buttons
+            {
+                if (chk[i].checked)//if condition to check whether check box button is checked or not -- if checked -- update the sal info
+                {
+                    let sal = (table1.rows[i + 1].cells[3].innerHTML);
+                    sal = parseInt(sal.substring(sal.indexOf('$')+1, sal.length - 1));
+                    console.log("-----------sal=" + sal );
+                    // if the salary info is under 4999 we cannot select the table row that include salary greater than that
+                    if (CreateTeam.salary1 < sal)
+                    {
+                        //document.getElementById("alerts").append("<p class='alert alert-danger'> must choose 10 players only. </p>")
+                       // window.alert("Exceeding the total CAP points $60,000 --- Choose another Player "); // alert message
+                        $('.alert-box').removeClass("hide");
+                        $('body').addClass("alert-box-open");
+                        $('.alert-box p').append("Exceeding the total CAP points $60,000 --- Choose another Player!!");
+                    }
+                    // to create the new record dynamically into the table2  that is show table of selected players
+                    else
+                        {
+                        var newRow = table2.insertRow(table2.length),
+                            cell1 = newRow.insertCell(0),
+                            cell2 = newRow.insertCell(1),
+                            cell3 = newRow.insertCell(2),
+                            cell4 = newRow.insertCell(3),
+                            cell5 = newRow.insertCell(4),
+                             cell6 = newRow.insertCell(5);
+
+
+                        cell1.innerHTML = table1.rows[i + 1].cells[0].innerHTML;
+                        cell3.innerHTML = table1.rows[i + 1].cells[1].innerHTML;
+                        cell4.innerHTML = table1.rows[i + 1].cells[2].innerHTML;
+                            cell5.innerHTML = table1.rows[i + 1].cells[3].innerHTML;
+                        cell6.innerHTML = "<label><input type='checkbox' name='chkRem' onclick='remove()'  id='chkRem' ><span class='btn btn-danger' style='background-color: #cd5c5c'>Delete</span></label>  ";
+                        if(table2.rows.length === 2 ){
+                            cell2.innerHTML = "Captain";
+                        }
+                        else {
+                            cell2.innerHTML = "Player";
+                        }
+
+                        //cell5.innerHTML =  "<input type='radio' name='captain' onclick='selectCaptain()' >"
+
+                            // check box button to create the  button at run time
+                        // to delete a row from selected players table
+                        /*cell4.innerHTML = "<input type='checkbox' name='chkRem' onclick='remove()'  id='chkRem' ><label for='chkRem' style='background-color: #cd5c5c'>Delete</label>  ";
+*/
+
+                        CreateTeam.salary1 -= sal;
+                        console.log(CreateTeam.salary1);
+                        document.getElementById("salary").innerHTML = "Salary= $" + (CreateTeam.salary1);
+
+                        chk[i].checked = false;
+                        chk[i].disabled = true;  // disable the add button once clicked because we cannot add a row 2 times
+                    }
+                }
+
+            }
+        }
+    }
+
+    /* function for for deleting a player from the added table*/
+    function remove()
+    {
+        var selPlayers = document.getElementById("selPlayers");
+       // var table1 = document.getElementById("showPlayer");
+        var chk = document.getElementsByName("chkRem");
+        // var selRem = document.getElementById("rem");
+
+        for (var i = 0; i < chk.length; i++)
+        {
+            if (chk[i].checked )
+            {
+                // get salary cell into sal variable and change to number type
+                var sal = selPlayers.rows[i + 1].cells[4].innerHTML;
+                // remove the $ sign  and make a substring
+                sal = parseInt(sal.substring(sal.indexOf('$')+1, sal.length - 1));
+
+                console.log("-----sal del "+sal);
+                CreateTeam.salary1 += sal; // if delete button is clicked th salary will add to actual
+
+                // lastly show the salary to browser window
+                document.getElementById("salary").innerHTML = "Salary= $" + (CreateTeam.salary1);
+                chk[i].checked = false;
+                console.log(chk[i]);
+
+
+                    if (i+1 === 1){
+                     //  console.log("======== "+ selPlayers.rows[2].cells[4].innerHTML);
+                       selPlayers.rows[2].cells[1].innerHTML = "Captain";
+                   }
+
+                     var index = selPlayers.rows[i+1].rowIndex;
+                    console.log("index:  " + index);
+                    selPlayers.deleteRow(index);
+                // }
+                // else {
+                //     var index = selPlayers.rows[i + 1].rowIndex;
+                //     selPlayers.deleteRow(index);
+                // }
+
+
+
+            }
+        }
+    }
+
+    function submitPlayers() {
+
+        let table = document.getElementById('selPlayers');
+
+        var data = [];
+        var header = [];
+
+
+        if (table.rows.length  < 11){
+
+           // $('#alerts').append("<div class='alert alert-danger alert-dismissible'> <button type='button' data-dismiss='alert'>&times  </button> <p> Cannot be less than 10 players</p> </div>");
+//            document.getElementById("alerts").append();
+          //  document.getElementById("alerts").
+            $('.alert-box p').empty();
+            $('.alert-box').removeClass("hide");
+            $('body').addClass("alert-box-open");
+            $('.alert-box p').append("Cannot be less than 10 players");
+           // window.alert("Cannot be less than 10 players");
+            //document.getElementById("lessThan10").innerHTML ="Cannot be less than 10"
+        }
+
+        else {
+
+            for (var i = 0; i < table.rows[0].cells.length; i++) {
+                header[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(/ /gi ,"");
+            }
+
+            for (var i = 1; i < table.rows.length; i++) {
+                var tableRow = table.rows[i];
+                var rowData = {};
+                console.log(tableRow.cells.length);
+                for (var j = 0; j < tableRow.cells.length; j++) {
+
+                    rowData[header[j]] = tableRow.cells[j].innerHTML.replace(/ /g, '').trim();
+
+                }
+                data.push(rowData);
+
+            }
+
+
+
+            var myjson = JSON.stringify(data);
+            console.log(myjson.trim());
+
+
+            fetch('/submitPlayers', {
+                method: 'POST', headers: {
+                    'Content-Type': 'application/json'
+                }, body: JSON.stringify({ data:data, id: Cid })
+            })
+                .then((res) => res.json())
+                .catch((error) => {
+                    alert(error)
+                })
+                $('.alert-box p').empty();
+                $('.alert-box').removeClass("hide");
+                $('body').addClass("alert-box-open");
+                $('.alert-box p').append("Data Saved..");
+           // window.alert("Data Saved..");
+        }
+      //  window.alert("Data Saved..")
+    }
+
+    function closeAlert() {
+        $('.alert-box').addClass("hide");
+        $('body').removeClass("alert-box-open");
+        $('.alert-box p').empty();
+    }
+
+</script>
+
+</body>
+</html>
