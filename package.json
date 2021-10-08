@@ -5,9 +5,9 @@
   "main": "app.js",
   "scripts": {
     "test": "mocha UnitTest/appTest.js"
-    "start":"node app.js"
+   
   },
-  
+   "start":"node app.js",
   "author": "Team B",
   "license": "ISC",
   "dependencies": {
